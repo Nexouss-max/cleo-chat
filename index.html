@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.2.12/marked.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <title>CLEO AI Skincare Consultant</title>
+</head>
+<body>
+    <div id="welcome-overlay">
+        <nav class="home-navbar">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-spa" aria-hidden="true"></i>
+                    <span>CLEO</span>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="about.html">About</a></li>
+                <li><a href="features.html">Features</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+        </nav>
+
+        <div class="aurora-background"></div>
+        <div class="home-container">
+            <div class="home-content">
+                <div class="welcome-icon-container">
+                    <i class="fas fa-spa"></i>
+                </div>
+                <h1>Welcome to CLEO</h1>
+                <p>Your personal AI skincare consultant. Ready to glow? Let's uncover your skin's true potential together.</p>
+                <div class="home-cta-container">
+                    <button id="enter-chat-btn" class="cta-button primary">
+                        <i class="fas fa-comment-dots" aria-hidden="true"></i>
+                        Begin Consultation
+                    </button>
+                    <button id="welcome-analyze-btn" class="cta-button secondary">
+                        <i class="fas fa-flask" aria-hidden="true"></i>
+                        Analyze Ingredients
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="home-footer">
+            <p>&copy; 2025 CLEO. All Rights Reserved.</p>
+        </footer>
+    </div>
+    
+    <div class="container" style="display: none;">
+        <div id="settings-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button id="close-settings" class="modal-close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-group">
+                        <label for="api-key-input">API Key</label>
+                        <input type="password" id="api-key-input" placeholder="Enter your OpenRouter API Key">
+                        <small>Your key is stored securely in your browser's local storage.</small>
+                    </div>
+                    <div class="settings-group">
+                        <label for="model-select">AI Model</label>
+                        <select id="model-select"></select>
+                        <small>Choose a pre-configured model or select 'Custom' to enter your own.</small>
+                    </div>
+                    <div class="settings-group" id="custom-model-container" style="display: none;">
+                        <label for="model-input">Custom Model Identifier</label>
+                        <input type="text" id="model-input" placeholder="e.g., google/gemini-flash-1.5">
+                        <small>Enter the full model identifier from your provider (e.g., OpenRouter).</small>
+                    </div>
+                    <div class="settings-group">
+                        <label for="system-prompt-input">System Prompt (AI Personality)</label>
+                        <textarea id="system-prompt-input" rows="6" placeholder="Define the AI's role and personality..."></textarea>
+                    </div>
+                    <div class="settings-group">
+                        <label for="user-profile-input">User Profile (Persistent Memory)</label>
+                        <textarea id="user-profile-input" rows="4" placeholder="Enter details about yourself you want the AI to always remember..."></textarea>
+                        <small>This profile is sent with every request to personalize responses.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="save-settings" class="modal-save-btn">Save and Reload</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="ingredient-analyzer-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-flask" style="margin-right: 10px;"></i>Ingredient Analyzer</h2>
+                    <button id="close-analyzer" class="modal-close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-group">
+                        <label for="ingredient-input">Paste Product Ingredient List</label>
+                        <textarea id="ingredient-input" rows="8" placeholder="e.g., Aqua, Glycerin, Niacinamide, ..."></textarea>
+                        <small>The AI will analyze the ingredients and provide a detailed breakdown.</small>
+                    </div>
+                    <div id="analyzer-results-container">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="analyze-ingredients-btn" class="modal-save-btn">Analyze Ingredients</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-container">
+            <div class="sidebar-overlay"></div>
+            <div class="sidebar collapsed">
+                <div class="logo">
+                    <i class="fas fa-spa" aria-hidden="true"></i>
+                    <span>CLEO</span>
+                </div>
+                <button id="new-chat" class="new-chat-btn" aria-label="Start a new consultation">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    <span>New Consultation</span>
+                </button>
+                <div class="history-container" role="navigation" aria-label="Chat history">
+                    <div class="history-header">
+                        <h3>Sessions</h3>
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-history" placeholder="Search...">
+                        </div>
+                    </div>
+                    <div id="chat-history"></div>
+                </div>
+                <div class="settings">
+                    <button id="open-settings" aria-label="Open settings panel">
+                        <i class="fas fa-cog" aria-hidden="true"></i>
+                        <span>Settings</span>
+                    </button>
+                    <button id="open-ingredient-analyzer" aria-label="Open Ingredient Analyzer">
+                        <i class="fas fa-flask" aria-hidden="true"></i>
+                        <span>Ingredient Analyzer</span>
+                    </button>
+                    <button id="clear-history" aria-label="Clear all chat history">
+                        <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                        <span>Clear History</span>
+                    </button>
+                    <div class="settings-item theme-selector-container">
+                        <button id="theme-menu-button" aria-label="Change theme">
+                            <i class="fas fa-palette"></i>
+                            <span>Theme</span>
+                        </button>
+                        <div id="theme-dropdown" class="theme-dropdown-menu" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <main class="chat-container">
+                <div class="chat-header">
+                    <button id="sidebar-toggle" title="Toggle Sidebar" aria-label="Toggle sidebar">
+                        <i class="fas fa-bars" aria-hidden="true"></i>
+                    </button>
+                    <div class="current-chat-title" id="current-chat-title" aria-live="polite">
+                        New Skincare Consultation
+                    </div>
+                    <div class="model-display" id="model-display-container">
+                        <i class="fas fa-brain"></i>
+                        <span id="current-model-display"></span>
+                    </div>
+                    <div class="header-actions">
+                        <button id="regenerate-response" title="Get another recommendation" aria-label="Regenerate response">
+                            <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                        </button>
+                        <button id="stop-response" title="Stop generating" style="display: none" aria-label="Stop generating response">
+                            <i class="fas fa-stop" aria-hidden="true"></i>
+                        </button>
+                        <button id="export-chat" title="Save consultation" aria-label="Export chat">
+                            <i class="fas fa-download" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="messages" id="messages" role="log" aria-live="polite">
+                </div>
+                <div class="input-area" role="form" aria-label="Chat input">
+                    <div class="input-container">
+                        <button id="file-upload-button" title="Upload an image or document" aria-label="Upload a file">
+                            <i class="fas fa-paperclip" aria-hidden="true"></i>
+                        </button>
+                        <input type="file" id="file-upload" style="display: none" accept="image/*,text/*,.js,.py,.css,.json,.md" />
+                        <textarea id="user-input" placeholder="Describe your skin concerns or ask me anything about skincare..." rows="1" aria-label="User input"></textarea>
+                        <button id="mic-button" title="Speak" aria-label="Speak">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button id="send-button" title="Send message" aria-label="Send message">
+                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div id="pending-file-preview"></div>
+                    <div class="disclaimer">
+                        CLEO provides general skincare advice. For serious skin conditions, please consult a dermatologist.
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+  <script type="module" src="js/main.js"></script>
+  <script src="js/nav.js"></script>
+</body>
+</html>
