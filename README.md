@@ -58,7 +58,7 @@ You need a web browser and a text editor.
 
 1.  **Clone the repo**
     ```sh
-    [git clone [https://github.com/your_username/your_repository_name.git](https://github.com/your_username/your_repository_name.git)](https://github.com/Nexouss-max/cleo-chat.git)
+    [git clone [https://github.com/Nexouss-max/cleo-chat.git)]
     ```
 2.  **Navigate to the project directory**
     ```sh
