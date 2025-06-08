@@ -2,7 +2,7 @@
 CLEO CHATBOT your personal AI to assist you skincare routine
 # CLEO - AI Skincare Consultant 🧴✨
 
-**Live Demo:** [Link to your live project here!](https://cleocaiv3.netlify.app/)].
+**Live Demo:** [Demo Live](https://cleocaiv3.netlify.app/).
 
 ## 📖 Description
 
